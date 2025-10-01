@@ -23,8 +23,7 @@
     "supertest": "^7.1.4"
   },
   "jest-junit": {
-  "outputDirectory": "reports/junit",
-  "outputName": "junit.xml"
-}
-
+    "outputDirectory": "reports/junit",
+    "outputName": "junit.xml"
+  }
 }
