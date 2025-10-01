@@ -40,12 +40,11 @@ pipeline {
     }
 
     stage('Security') {
-      steps {
-        sh 'npm install -g snyk || true'
-        sh 'snyk auth ${SNYK_TOKEN}'
-        sh 'mkdir -p reports && snyk test --json > reports/snyk.json || true'
-        archiveArtifacts artifacts: 'reports/snyk.json', onlyIfSuccessful: false
+  steps {
+    sh 'npx snyk auth ${SNYK_TOKEN}'
+    sh 'mkdir -p reports && npx snyk test --json > reports/snyk.json || true'
+    archiveArtifacts artifacts: 'reports/snyk.json', onlyIfSuccessful: false
+  	}
       }
-    }
   }
 }
