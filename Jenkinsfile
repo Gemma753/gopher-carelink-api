@@ -41,17 +41,16 @@ pipeline {
       }
     }
 
-    stage('Security') {
-  steps {
-    echo '=== Security Stage (Snyk) ==='
-    withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
-// Use global Snyk CLI installed on the Jenkins agent
-      bat "snyk auth %SNYK_TOKEN%"
-      bat "if not exist reports mkdir reports"
-      bat "snyk test --json > reports\\snyk.json || exit/b 0"
-      archiveArtifacts artifacts: 'reports/snyk.json', onlyIfSuccessful: false
-      }
-    }
+	stage('Security') {
+  	steps {
+    	echo '=== Security Stage (Snyk via npx) ==='
+    	withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+      	bat "npx snyk auth %SNYK_TOKEN%"
+      	bat "if not exist reports mkdir reports"
+      	bat "npx snyk test --json > reports\\snyk.json || exit 0"
+      	archiveArtifacts artifacts: 'reports/snyk.json', onlyIfSuccessful: false
+    	}
+     }
   }
 
 }
