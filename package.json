@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "jest --ci --coverage --reporters=default --reporters=jest-junit",
-    "build": "mkdir -p build && tar -czf build/gopher-carelink-api.tgz package.json src"
+    "build": "mkdir build || echo Build folder exists && tar -a -c -f build\\gopher-carelink-api.zip package.json src"
   },
   "keywords": [],
   "author": "",
