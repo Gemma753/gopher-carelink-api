@@ -21,5 +21,10 @@
     "jest-junit": "^16.0.0",
     "snyk": "^1.1299.1",
     "supertest": "^7.1.4"
-  }
+  },
+  "jest-junit": {
+  "outputDirectory": "reports/junit",
+  "outputName": "junit.xml"
+}
+
 }
