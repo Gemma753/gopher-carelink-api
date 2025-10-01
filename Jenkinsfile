@@ -48,7 +48,7 @@ pipeline {
 // Use global Snyk CLI installed on the Jenkins agent
       bat "snyk auth %SNYK_TOKEN%"
       bat "if not exist reports mkdir reports"
-      bat "snyk test --json > reports\\snyk.json || exit 0"
+      bat "snyk test --json > reports\\snyk.json || exit/b 0"
       archiveArtifacts artifacts: 'reports/snyk.json', onlyIfSuccessful: false
       }
     }
