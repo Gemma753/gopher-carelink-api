@@ -3,7 +3,6 @@ pipeline {
   options { timestamps() }
 
   environment {
-    // Snyk token stored in Jenkins Credentials (ID = snyk-token)
     SNYK_TOKEN = credentials('snyk-token')
   }
 
@@ -11,8 +10,8 @@ pipeline {
     stage('Build') {
       steps {
         echo '=== Build Stage ==='
-        sh 'npm ci'
-        sh 'npm run build'
+        bat 'npm ci'
+        bat 'npm run build'
         archiveArtifacts artifacts: 'build/**', fingerprint: true
       }
     }
@@ -20,7 +19,7 @@ pipeline {
     stage('Test') {
       steps {
         echo '=== Test Stage ==='
-        sh 'npm test'
+        bat 'npm test'
       }
       post {
         always {
@@ -32,27 +31,25 @@ pipeline {
 
     stage('Code Quality') {
       environment {
-        // Use the SonarScanner tool you configured in Jenkins Tools (name: SonarScanner)
         SCANNER_HOME = tool 'SonarScanner'
       }
       steps {
         echo '=== Code Quality Stage (SonarCloud) ==='
         withSonarQubeEnv('Sonar') {
-          sh '${SCANNER_HOME}/bin/sonar-scanner'
+          bat "\"%SCANNER_HOME%\\bin\\sonar-scanner.bat\""
         }
       }
     }
 
     stage('Security') {
       environment {
-        // Use the Snyk tool you configured in Jenkins Tools (name: Snyk)
         SNYK_HOME = tool 'Snyk'
       }
       steps {
         echo '=== Security Stage (Snyk) ==='
         withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
-          sh '${SNYK_HOME}/bin/snyk auth $SNYK_TOKEN'
-          sh 'mkdir -p reports && ${SNYK_HOME}/bin/snyk test --json > reports/snyk.json || true'
+          bat "\"%SNYK_HOME%\\bin\\snyk.cmd\" auth %SNYK_TOKEN%"
+          bat "mkdir reports && \"%SNYK_HOME%\\bin\\snyk.cmd\" test --json > reports\\snyk.json || exit 0"
           archiveArtifacts artifacts: 'reports/snyk.json', onlyIfSuccessful: false
         }
       }
